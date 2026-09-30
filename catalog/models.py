@@ -8,6 +8,7 @@ class Genre(models.Model):
         unique=True,
         help_text="Enter a unique music genre (eg., Rock, Hip-Hop)."
     )
+
     slug = models.SlugField(
         unique=True,
         blank=True,
@@ -34,15 +35,18 @@ class Artist(models.Model):
         max_length=100,
         help_text="Name of artist or band."
     )
+
     bio = models.TextField(
         blank=True,
         null=True,
         help_text="Optionally, add or paste info about the artist or band here."
     )
+
     image_url = models.URLField(
         blank=True,
         default=DEFAULT_ARTIST_IMAGE
     )
+
     genre = models.ManyToManyField(
         to=Genre,
         related_name="artists",
