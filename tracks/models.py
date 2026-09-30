@@ -1,6 +1,6 @@
 from django.core.validators import MinValueValidator
 from django.db import models
-from validators import validate_url_extension
+from .validators import validate_url_extension
 
 
 class Track(models.Model):
