@@ -47,7 +47,7 @@ class Artist(models.Model):
         default=DEFAULT_ARTIST_IMAGE
     )
 
-    genre = models.ManyToManyField(
+    genres = models.ManyToManyField(
         to=Genre,
         related_name="artists",
         help_text="Select one or more genres for this artist/band."

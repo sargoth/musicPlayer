@@ -1,10 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-slate-950 text-slate-100">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}musicPlayer | Community Audio Hub{% endblock %}</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="flex flex-col min-h-full pb-28">
 
+    <!-- Top Navigation Bar -->
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <a href="{% url 'catalog:home' %}" class="flex items-center gap-2 font-bold text-xl text-indigo-400 hover:text-indigo-300 transition">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+                <span>musicPlayer</span>
+            </a>
+
+            <nav class="flex items-center gap-6 text-sm font-medium">
+                <a href="{% url 'catalog:home' %}" class="hover:text-indigo-400 transition">Home</a>
+                <a href="{% url 'catalog:list_artists' %}" class="hover:text-indigo-400 transition">Artists</a>
+                <a href="{% url 'catalog:list_albums' %}" class="hover:text-indigo-400 transition">Albums</a>
+{#                <a href="{% url 'track-list' %}" class="hover:text-indigo-400 transition">Tracks</a>#}
+{#                <a href="{% url 'playlist-list' %}" class="hover:text-indigo-400 transition">Playlists</a>#}
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Fixed Bottom Audio Player -->
+    <div class="fixed bottom-0 left-0 right-0 z-50 bg-slate-900 border-t border-slate-800 p-4 shadow-2xl">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+
+            <!-- Now Playing Meta -->
+            <div class="flex items-center gap-3 w-full md:w-1/4">
+                <div id="player-cover" class="w-12 h-12 bg-slate-800 rounded flex items-center justify-center overflow-hidden">
+                    <svg class="w-6 h-6 text-slate-600" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+                </div>
+                <div class="truncate">
+                    <div id="player-title" class="font-medium text-sm text-slate-200 truncate">Select a track to play</div>
+                    <div id="player-artist" class="text-xs text-slate-400 truncate">Global Audio Library</div>
+                </div>
+            </div>
+
+            <!-- Native Audio Control -->
+            <div class="w-full md:w-2/4">
+                <audio id="global-audio-element" controls class="w-full h-10 accent-indigo-500">
+                    <source id="audio-source" src="" type="audio/mpeg">
+                    Your browser does not support HTML5 audio.
+                </audio>
+            </div>
+
+            <div class="hidden md:block w-1/4 text-right text-xs text-slate-500">
+                Community Jukebox
+            </div>
+
+        </div>
+    </div>
+    <!-- Global Playback Script -->
+    <script>
+        function playTrack(audioUrl, title, artist, coverUrl) {
+            const audio = document.getElementById('global-audio-element');
+            const titleElem = document.getElementById('player-title');
+            const artistElem = document.getElementById('player-artist');
+            const coverContainer = document.getElementById('player-cover');
+
+            // 1. Update the UI text and image
+            titleElem.textContent = title;
+            artistElem.textContent = artist || 'Unknown Artist';
+
+            if (coverUrl) {
+                coverContainer.innerHTML = `<img src="${coverUrl}" alt="${title}" class="w-full h-full object-cover">`;
+            }
+
+            // 2. Set the src directly on the audio element (bypasses the <source> tag)
+            audio.src = audioUrl;
+
+            // 3. Play the audio and catch any AbortErrors gracefully
+            audio.play().catch(function(error) {
+                console.warn("Playback interrupted or waiting for user interaction:", error);
+            });
+        }
+    </script>
 </body>
 </html>
