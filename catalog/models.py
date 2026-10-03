@@ -71,7 +71,7 @@ class Album(models.Model):
 
     title = models.CharField(
         max_length=200,
-        help_text="Title of an album or a single."
+        help_text="Official title of the album"
     )
     release_year = models.PositiveIntegerField(
         help_text="Album release year (eg., 2026)"
@@ -79,7 +79,7 @@ class Album(models.Model):
     cover_image_url = models.URLField(
         blank=True,
         default=DEFAULT_ALBUM_IMAGE,
-        help_text="Album cover artwork URL."
+        help_text="Album cover artwork URL"
     )
     artist = models.ForeignKey(
         to=Artist,
