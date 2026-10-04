@@ -9,12 +9,9 @@
         <h1 class="text-3xl font-extrabold text-white mb-2">Artists</h1>
         <p class="text-slate-400">Discover all artists in the community library.</p>
     </div>
-    <!-- Optional: Add an "Add Artist" button if you have the URL ready -->
-    <!-- 
-    <a href="#" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-md transition shadow-lg shadow-indigo-500/20">
+    <a href="{% url 'catalog:create_artist' %}" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-md transition shadow-lg shadow-indigo-500/20">
         + Add Artist
-    </a> 
-    -->
+    </a>
 </div>
 
 <!-- Artists Grid -->
@@ -42,11 +39,7 @@
         
         <!-- Render Genres (if you added a ManyToManyField for genres on Artist) -->
         <p class="text-xs text-slate-400 line-clamp-1">
-            {% for genre in artist.genres.all %}
-                {{ genre.name }}
-            {% empty %}
-                Unknown Genre
-            {% endfor %}
+            {{ artist.genres.all|join:", " }}
         </p>
     </a>
     {% empty %}

@@ -6,6 +6,7 @@
     <title>{% block title %}musicPlayer | Community Audio Hub{% endblock %}</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="https://unpkg.com/@hotwired/turbo@8.0.4/dist/turbo.es2017-esm.js"></script>
 </head>
 <body class="flex flex-col min-h-full pb-28">
 
@@ -18,7 +19,6 @@
             </a>
 
             <nav class="flex items-center gap-6 text-sm font-medium">
-                <a href="{% url 'catalog:home' %}" class="hover:text-indigo-400 transition">Home</a>
                 <a href="{% url 'catalog:list_artists' %}" class="hover:text-indigo-400 transition">Artists</a>
                 <a href="{% url 'catalog:list_albums' %}" class="hover:text-indigo-400 transition">Albums</a>
 {#                <a href="{% url 'track-list' %}" class="hover:text-indigo-400 transition">Tracks</a>#}
@@ -33,7 +33,7 @@
     </main>
 
     <!-- Fixed Bottom Audio Player -->
-    <div class="fixed bottom-0 left-0 right-0 z-50 bg-slate-900 border-t border-slate-800 p-4 shadow-2xl">
+    <div id="global-music-player" data-turbo-permanent class="fixed bottom-0 left-0 right-0 z-50 bg-slate-900 border-t border-slate-800 p-4 shadow-2xl">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
 
             <!-- Now Playing Meta -->

@@ -15,11 +15,7 @@
 
             <!-- Genres -->
             <div class="text-sm font-bold text-indigo-400 uppercase tracking-wider mb-4">
-                {% for genre in artist.genres.all %}
-                    {{ genre.name }}
-                {% empty %}
-                    Unknown Genre
-                {% endfor %}
+                {{ artist.genres.all|join:", " }}
             </div>
 
             <!-- The Biography -->
@@ -39,9 +35,12 @@
         {#    </button>#}
 
         <!-- Optional Edit/Delete links for exam requirements -->
-        <a href="#"
+        <a href="{% url 'catalog:edit_artist' artist.pk %}"
            class="text-slate-400 hover:text-white transition text-sm font-medium px-4 py-2 border border-slate-700 rounded-full hover:bg-slate-800">
             Edit Artist
+        </a>
+        <a href="{% url 'catalog:delete_artist' artist.pk %}" class="text-slate-400 hover:text-white transition text-sm font-medium px-4 py-2 border border-slate-700 rounded-full hover:bg-slate-800">
+        Delete Artist
         </a>
     </div>
 
@@ -85,7 +84,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                               d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
                     </svg>
-                    <p class="text-slate-400 text-sm">No tracks added to this album yet.</p>
+                    <p class="text-slate-400 text-sm">No tracks added to this artist yet.</p>
                     <a href="#" class="mt-4 text-indigo-400 text-sm hover:underline">Add a track</a>
                 </div>
             {% endfor %}
@@ -103,7 +102,7 @@
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 mt-12">
         {% for album in artist.albums.all %}
             <!-- Album Card -->
-            <a href="{% url 'catalog:album-detail' album.pk %}"
+            <a href="{% url 'catalog:album_detail' album.pk %}"
                class="group bg-slate-900 border border-slate-800 rounded-xl p-4 hover:border-indigo-500/50 hover:bg-slate-800/50 transition flex flex-col shadow-sm hover:shadow-xl">
 
                 <!-- Square Image Container -->
@@ -129,7 +128,7 @@
                           d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
                 </svg>
                 <h3 class="text-lg font-medium text-white mb-1">No albums found</h3>
-                <p class="text-slate-400 text-sm">There are no albums in the catalog yet.</p>
+                <p class="text-slate-400 text-sm">There are no albums in this artist's catalog yet.</p>
             </div>
         {% endfor %}
     </div>

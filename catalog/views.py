@@ -1,7 +1,7 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
-from catalog.forms import CreateAlbumForm
+from catalog.forms import CreateAlbumForm, CreateArtistForm
 from catalog.models import Album, Artist
 from tracks.models import Track
 
@@ -89,3 +89,63 @@ def delete_album_view(request: HttpRequest, pk: int) -> HttpResponse:
     }
 
     return render(request, "catalog/delete_album.html", context)
+
+
+def create_artist_view(request: HttpRequest) -> HttpResponse:
+    form = CreateArtistForm(request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        return redirect("catalog:list_artists")
+
+    context = {
+        "form": form
+    }
+
+    return render(request, "catalog/create_artist.html", context)
+
+
+def delete_artist_view(request: HttpRequest, pk: int) -> HttpResponse:
+    artist = get_object_or_404(Artist, pk=pk)
+
+    if request.method == "POST":
+        artist.delete()
+        return redirect("catalog:list_artists")
+
+    context = {
+        "artist": artist
+    }
+
+    return render(request, "catalog/delete_artist.html", context)
+
+
+def edit_album_view(request: HttpRequest, pk: int) -> HttpResponse:
+    album = get_object_or_404(Album, pk=pk)
+    form = CreateAlbumForm(request.POST or None, instance=album)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        return redirect('catalog:album_detail', pk=album.pk)
+
+    context = {
+        "album": album,
+        "form": form
+    }
+
+    return render(request, "catalog/edit_album.html", context)
+
+
+def edit_artist_view(request: HttpRequest, pk: int) -> HttpResponse:
+    artist = get_object_or_404(Artist, pk=pk)
+    form = CreateArtistForm(request.POST or None, instance=artist)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        return redirect('catalog:artist_detail', pk=artist.pk)
+
+    context = {
+        "artist": artist,
+        "form": form
+    }
+
+    return render(request, "catalog/edit_artist.html", context)
