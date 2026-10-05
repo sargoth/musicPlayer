@@ -6,23 +6,6 @@ from catalog.models import Album, Artist
 from tracks.models import Track
 
 
-def home_view(request: HttpRequest) -> HttpResponse:
-    recent_albums = Album.objects.select_related("artist").all()[:4]
-    popular_tracks = Track.objects.select_related(
-        "album",
-        "album__artist"
-    ).order_by(
-        "-times_played"
-    )[:4]
-
-    context = {
-        "recent_albums": recent_albums,
-        "popular_tracks": popular_tracks
-    }
-
-    return render(request, "catalog/home.html", context)
-
-
 def list_all_artists_view(request: HttpRequest) -> HttpResponse:
     artists = Artist.objects.prefetch_related("genres").all()
     context = {

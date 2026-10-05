@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="max-w-md mx-auto mt-20 mb-20">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-xl text-center">
+
+        <!-- Warning Icon -->
+        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-500/10 mb-4">
+            <svg class="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+        </div>
+
+        <h2 class="text-2xl font-bold text-white mb-2">Delete Album?</h2>
+        <p class="text-slate-400 text-sm mb-6">
+            Are you sure you want to permanently delete the track <strong class="text-white">"{{ track.title }}"</strong>? This action cannot be undone.
+        </p>
+
+        <!-- The Delete Form -->
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="flex flex-col-reverse sm:flex-row gap-3 justify-center mt-8">
+                <!-- Cancel Button -->
+                <a href="{% url 'catalog:album_detail' album.pk %}" class="w-full sm:w-auto px-6 py-2.5 text-sm font-medium text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-lg transition border border-slate-700">
+                    Cancel
+                </a>
+
+                <!-- Confirm Delete Button -->
+                <button type="submit" class="w-full sm:w-auto px-6 py-2.5 bg-red-600 hover:bg-red-500 text-white text-sm font-medium rounded-lg transition shadow-lg shadow-red-600/30">
+                    Yes, Delete
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+{% endblock %}

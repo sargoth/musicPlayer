@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.text import slugify
 
+from tracks.models import Track
+
 
 class Genre(models.Model):
     name = models.CharField(
@@ -98,3 +100,11 @@ class Album(models.Model):
         if not self.cover_image_url or not self.cover_image_url.strip():
             self.cover_image_url = self.DEFAULT_ALBUM_IMAGE
         super().save(*args, **kwargs)
+
+    def total_duration(self):
+        total_track_duration = sum(track.duration_in_seconds for track in self.tracks.all())
+
+        minutes = total_track_duration // 60
+        seconds = total_track_duration % 60
+
+        return f"{minutes}:{seconds:02d}"
