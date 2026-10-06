@@ -1,57 +1,23 @@
 {% extends 'base.html' %}
-
 {% block title %}Artists | musicPlayer{% endblock %}
-
 {% block content %}
-<!-- Page Header -->
-<div class="mb-8 flex items-end justify-between">
-    <div>
-        <h1 class="text-3xl font-extrabold text-white mb-2">Artists</h1>
-        <p class="text-slate-400">Discover all artists in the community library.</p>
+    {% include 'includes/list_header.html' with header_title="Artists" header_subtitle="Discover all artists in the community library." button_link="catalog:create_artist" button_label="Add Artist" %}
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+        {% for artist in artists %}
+            <a href="{% url 'catalog:artist_detail' artist.pk %}"
+               class="group bg-slate-900 border border-slate-800 rounded-xl p-6 hover:border-indigo-500/50 hover:bg-slate-800/50 transition flex flex-col items-center text-center shadow-sm hover:shadow-xl">
+                <div class="w-32 h-32 rounded-full overflow-hidden bg-slate-800 mb-4 shadow-lg shadow-black/40 border-4 border-slate-800 group-hover:border-indigo-500/30 transition duration-300">
+                    <img src="{{ artist.image_url }}"
+                         alt="{{ artist.name }}"
+                         class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <h3 class="font-bold text-lg text-white mb-1 group-hover:text-indigo-400 transition">{{ artist.name }}</h3>
+                <p class="text-xs text-slate-400 line-clamp-1">
+                    {{ artist.genres.all|join:", " }}
+                </p>
+            </a>
+        {% empty %}
+            {% include 'includes/list_empty_state.html' with empty_state_title="No artists found" empty_state_message="There are no artists in the catalog yet." %}
+        {% endfor %}
     </div>
-    <a href="{% url 'catalog:create_artist' %}" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-md transition shadow-lg shadow-indigo-500/20">
-        + Add Artist
-    </a>
-</div>
-
-<!-- Artists Grid -->
-<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-    {% for artist in artists %}
-    <!-- 
-{#      Note: Update href="#" to {% url 'artist-detail' artist.pk %} #}
-      once you create the artist detail view and URL! 
-    -->
-    <a href="{% url 'catalog:artist_detail' artist.pk %}" class="group bg-slate-900 border border-slate-800 rounded-xl p-6 hover:border-indigo-500/50 hover:bg-slate-800/50 transition flex flex-col items-center text-center shadow-sm hover:shadow-xl">
-        
-        <!-- Circular Image Container -->
-        <div class="w-32 h-32 rounded-full overflow-hidden bg-slate-800 mb-4 shadow-lg shadow-black/40 border-4 border-slate-800 group-hover:border-indigo-500/30 transition duration-300">
-            <!-- 
-              Ensure your Artist model's image field name matches here. 
-              Using 'image_url' or 'cover_image_url' based on your model setup. 
-            -->
-            <img src="{{ artist.image_url }}"
-                 alt="{{ artist.name }}" 
-                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-        </div>
-        
-        <!-- Artist Info -->
-        <h3 class="font-bold text-lg text-white mb-1 group-hover:text-indigo-400 transition">{{ artist.name }}</h3>
-        
-        <!-- Render Genres (if you added a ManyToManyField for genres on Artist) -->
-        <p class="text-xs text-slate-400 line-clamp-1">
-            {{ artist.genres.all|join:", " }}
-        </p>
-    </a>
-    {% empty %}
-    
-    <!-- Empty State -->
-    <div class="col-span-full py-16 flex flex-col items-center justify-center bg-slate-900/50 border border-slate-800 border-dashed rounded-2xl text-center">
-        <svg class="w-16 h-16 text-slate-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
-        </svg>
-        <h3 class="text-lg font-medium text-white mb-1">No artists found</h3>
-        <p class="text-slate-400 text-sm">There are no artists in the catalog yet.</p>
-    </div>
-    {% endfor %}
-</div>
 {% endblock %}

@@ -1,0 +1,10 @@
+<div class="mb-8 flex items-end justify-between">
+    <div>
+        <h1 class="text-3xl font-extrabold text-white mb-2">{{ header_title }}</h1>
+        <p class="text-slate-400">{{ header_subtitle }}</p>
+    </div>
+    <a href="{% url button_link %}"
+       class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-md transition shadow-lg shadow-indigo-500/20">
+        + {{ button_label }}
+    </a>
+</div>
