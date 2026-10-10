@@ -7,5 +7,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home_view, name='home'),
     path('', include('catalog.urls')),
-    path('', include('tracks.urls'))
+    path('', include('tracks.urls')),
+    path('', include('playlists.urls'))
 ]

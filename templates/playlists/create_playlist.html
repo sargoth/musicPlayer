@@ -1,0 +1,15 @@
+{% extends 'base_form.html' %}
+
+{% block form_title %}
+    Create Playlist
+{% endblock %}
+
+{% block cancel_button %}
+    <a href="{% url 'playlists:list_playlists' %}" class="text-sm font-medium text-slate-400 hover:text-white transition px-4 py-2">
+        Cancel
+    </a>
+{% endblock %}
+
+{% block submit_button %}
+    Create
+{% endblock %}

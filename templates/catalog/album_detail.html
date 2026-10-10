@@ -55,7 +55,7 @@
 
                         <!-- Track Number / Play Button (swaps on hover) -->
                         <div class="relative w-full flex items-center justify-center">
-                            <span class="text-slate-500 text-sm group-hover:hidden">{{ track.pk }}</span>
+                            <span class="text-slate-500 text-sm group-hover:hidden">{{ forloop.counter }}</span>
                             <button
                                     onclick="playTrack('{{ track.track_url }}', '{{ track.title }}', '{{ track.album.artist.name }}', '{{ track.album.cover_image_url }}')"
                                     class="hidden group-hover:flex w-6 h-6 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white items-center justify-center transition">
@@ -76,7 +76,6 @@
                         <!-- Delete Action (Reveals on Hover) -->
                         <div class="flex items-center justify-center opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200">
                             <a href="{% url 'tracks:delete_track' track.pk %}"
-{#                               onclick="return confirm('Are you sure you want to delete {{ track.title|escapejs }}?');"#}
                                class="text-slate-500 hover:text-red-500 transition p-1"
                                title="Delete Track">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

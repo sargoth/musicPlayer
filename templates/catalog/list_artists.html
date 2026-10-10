@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Artists | musicPlayer{% endblock %}
 {% block content %}
-    {% include 'includes/list_header.html' with header_title="Artists" header_subtitle="Discover all artists in the community library." button_link="catalog:create_artist" button_label="Add Artist" %}
+    {% include 'includes/../page_header.html' with header_title="Artists" header_subtitle="Discover all artists in the community library." button_link="catalog:create_artist" button_label="Add Artist" %}
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
         {% for artist in artists %}
             <a href="{% url 'catalog:artist_detail' artist.pk %}"
@@ -17,7 +17,7 @@
                 </p>
             </a>
         {% empty %}
-            {% include 'includes/list_empty_state.html' with empty_state_title="No artists found" empty_state_message="There are no artists in the catalog yet." %}
+            {% include 'includes/../empty_state.html' with empty_state_title="No artists found" empty_state_message="There are no artists in the catalog yet." %}
         {% endfor %}
     </div>
 {% endblock %}

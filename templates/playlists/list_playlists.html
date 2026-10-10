@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Playlists
+{% endblock %}
+
+{% block content %}
+    {% include 'includes/../page_header.html' with title="Playlists" button_link="playlists:create_playlist" button_label="Create Playlist" %}
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+        {% for playlist in playlists %}
+            <a href="{% url 'playlists:playlist_detail' playlist.pk %}"
+               class="group bg-slate-900 border border-slate-800 rounded-xl p-4 hover:border-indigo-500/50 hover:bg-slate-800/50 transition flex flex-col shadow-sm hover:shadow-xl">
+                <div class="aspect-square w-full rounded-lg overflow-hidden bg-slate-800 mb-4 shadow-md flex items-center justify-center">
+                    {% if playlist.cover_image %}
+                        <img src="{{ playlist.cover_image.url }}"
+                             alt="{{ playlist.title }}"
+                             class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    {% else %}
+                        <svg class="w-12 h-12 text-slate-600 group-hover:text-indigo-400 transition" fill="none"
+                             stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                  d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+                        </svg>
+                    {% endif %}
+                </div>
+                <h3 class="font-bold text-base text-white mb-1 truncate group-hover:text-indigo-400 transition">
+                    {{ playlist.title }}
+                </h3>
+                <p class="text-xs text-slate-400 truncate">
+                    {{ playlist.tracks.count }} track{{ playlist.tracks.count|pluralize }}
+                </p>
+            </a>
+        {% empty %}
+            {% include 'includes/../empty_state.html' with title="No playlists found" message="You haven't created any playlists yet." %}
+        {% endfor %}
+    </div>
+{% endblock %}

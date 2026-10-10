@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-    {% include 'includes/list_header.html' with header_title="Albums" header_subtitle="Browse the complete album collection." button_link="catalog:create_album" button_label="Add Album" %}
+    {% include 'includes/../page_header.html' with header_title="Albums" header_subtitle="Browse the complete album collection." button_link="catalog:create_album" button_label="Add Album" %}
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
         {% for album in albums %}
             <a href="{% url 'catalog:album_detail' album.pk %}"
@@ -19,7 +19,7 @@
                 </p>
             </a>
         {% empty %}
-            {% include 'includes/list_empty_state.html' with empty_state_title="No albums found" empty_state_message="There are no albums in the catalog yet." %}
+            {% include 'includes/../empty_state.html' with empty_state_title="No albums found" empty_state_message="There are no albums in the catalog yet." %}
         {% endfor %}
     </div>
 {% endblock %}

@@ -5,7 +5,6 @@ from catalog import views
 app_name = 'catalog'
 
 urlpatterns = [
-    # path('', views.home_view, name='home'),
     path('artists/', include([
         path('', views.list_all_artists_view, name='list_artists'),
         path('create/', views.create_artist_view, name='create_artist'),

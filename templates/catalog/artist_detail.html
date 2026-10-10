@@ -60,7 +60,7 @@
 
                     <!-- Track Number / Play Button (swaps on hover) -->
                     <div class="relative w-full flex items-center justify-center">
-                        <span class="text-slate-500 text-sm group-hover:hidden">{{ track.pk }}</span>
+                        <span class="text-slate-500 text-sm group-hover:hidden">{{ forloop.counter }}</span>
                         <button
                                 onclick="playTrack('{{ track.track_url }}', '{{ track.title }}', '{{ track.album.artist.name }}', '{{ track.album.cover_image_url }}')"
                                 class="hidden group-hover:flex text-indigo-400 hover:text-indigo-300 transition">
