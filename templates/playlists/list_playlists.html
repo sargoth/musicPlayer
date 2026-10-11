@@ -11,8 +11,8 @@
             <a href="{% url 'playlists:playlist_detail' playlist.pk %}"
                class="group bg-slate-900 border border-slate-800 rounded-xl p-4 hover:border-indigo-500/50 hover:bg-slate-800/50 transition flex flex-col shadow-sm hover:shadow-xl">
                 <div class="aspect-square w-full rounded-lg overflow-hidden bg-slate-800 mb-4 shadow-md flex items-center justify-center">
-                    {% if playlist.cover_image %}
-                        <img src="{{ playlist.cover_image.url }}"
+                    {% if playlist.cover_img_url %}
+                        <img src="{{ playlist.cover_img_url }}"
                              alt="{{ playlist.title }}"
                              class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                     {% else %}
