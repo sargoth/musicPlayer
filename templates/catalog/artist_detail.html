@@ -1,24 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
-
-    <!-- Artist Header Section -->
     <div class="flex flex-col md:flex-row gap-8 items-start mb-10 mt-4">
-
-        <!-- Circular Artist Cover -->
         <div class="w-56 h-56 shrink-0 rounded-full overflow-hidden shadow-2xl bg-slate-800 border-4 border-slate-700/50">
             <img src="{{ artist.image_url }}" alt="{{ artist.name }}" class="w-full h-full object-cover">
         </div>
-
-        <!-- Artist Metadata & Bio -->
         <div class="flex flex-col pt-4">
             <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-3">{{ artist.name }}</h1>
-
-            <!-- Genres -->
             <div class="text-sm font-bold text-indigo-400 uppercase tracking-wider mb-4">
                 {{ artist.genres.all|join:", " }}
             </div>
-
-            <!-- The Biography -->
             {% if artist.bio %}
                 <p class="text-slate-300 max-w-3xl leading-relaxed text-sm md:text-base">
                     {{ artist.bio }}
@@ -26,39 +16,20 @@
             {% endif %}
         </div>
     </div>
-
-    <!-- Action Buttons -->
     <div class="flex items-center gap-4 mb-8">
-        <!-- You can wire this button later to play the first track, or leave it out -->
-        {#    <button class="w-14 h-14 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center transition shadow-lg shadow-indigo-600/30">#}
-        {#        <svg class="w-6 h-6 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>#}
-        {#    </button>#}
-
-        <!-- Optional Edit/Delete links for exam requirements -->
         <a href="{% url 'catalog:edit_artist' artist.pk %}"
            class="text-slate-400 hover:text-white transition text-sm font-medium px-4 py-2 border border-slate-700 rounded-full hover:bg-slate-800">
             Edit Artist
         </a>
-        <a href="{% url 'catalog:delete_artist' artist.pk %}" class="text-slate-400 hover:text-white transition text-sm font-medium px-4 py-2 border border-slate-700 rounded-full hover:bg-slate-800">
-        Delete Artist
+        <a href="{% url 'catalog:delete_artist' artist.pk %}"
+           class="text-slate-400 hover:text-white transition text-sm font-medium px-4 py-2 border border-slate-700 rounded-full hover:bg-slate-800">
+            Delete Artist
         </a>
     </div>
-
-    <!-- Tracklist Section -->
     <div class="mt-8">
-        <!-- Table Header -->
-        <div class="grid grid-cols-[3rem_1fr_auto] gap-4 px-4 py-2 border-b border-slate-800 text-sm text-slate-400 font-medium mb-2">
-            <div class="text-center">#</div>
-            <div>Title</div>
-            <div class="pr-4">Duration</div>
-        </div>
-
         <div class="flex flex-col gap-1">
             {% for track in tracks %}
-                <!-- Single Track Row -->
                 <div class="group grid grid-cols-[3rem_1fr_auto] gap-4 px-4 py-3 items-center hover:bg-slate-800/60 rounded-lg transition duration-200 border border-transparent hover:border-slate-700/50 {% if forloop.counter > 5 %}hidden expandable-track{% endif %}">
-
-                    <!-- Track Number / Play Button (swaps on hover) -->
                     <div class="relative w-full flex items-center justify-center">
                         <span class="text-slate-500 text-sm group-hover:hidden">{{ forloop.counter }}</span>
                         <button
@@ -67,25 +38,12 @@
                             ▶
                         </button>
                     </div>
-
-                    <!-- Track Title -->
                     <div class="font-medium text-slate-200 group-hover:text-white transition">
                         {{ track.title }}
                     </div>
-
-                    <!-- Duration -->
                     <div class="text-slate-500 text-sm font-mono pr-4 group-hover:text-slate-300 transition">
                         {{ track.convert_track_duration }}
                     </div>
-                </div>
-            {% empty %}
-                <div class="py-12 flex flex-col items-center justify-center bg-slate-900/30 border border-slate-800 border-dashed rounded-xl text-center mt-4">
-                    <svg class="w-12 h-12 text-slate-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                              d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
-                    </svg>
-                    <p class="text-slate-400 text-sm">No tracks added to this artist yet.</p>
-                    <a href="#" class="mt-4 text-indigo-400 text-sm hover:underline">Add a track</a>
                 </div>
             {% endfor %}
         </div>
@@ -98,21 +56,15 @@
             </div>
         {% endif %}
     </div>
-    <!-- Albums Grid -->
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 mt-12">
         {% for album in artist.albums.all %}
-            <!-- Album Card -->
             <a href="{% url 'catalog:album_detail' album.pk %}"
                class="group bg-slate-900 border border-slate-800 rounded-xl p-4 hover:border-indigo-500/50 hover:bg-slate-800/50 transition flex flex-col shadow-sm hover:shadow-xl">
-
-                <!-- Square Image Container -->
                 <div class="aspect-square w-full rounded-lg overflow-hidden bg-slate-800 mb-4 shadow-md">
                     <img src="{{ album.cover_image_url }}"
                          alt="{{ album.title }}"
                          class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                 </div>
-
-                <!-- Album Info -->
                 <h3 class="font-bold text-base text-white mb-1 truncate group-hover:text-indigo-400 transition">
                     {{ album.title }}
                 </h3>
@@ -128,7 +80,11 @@
                           d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
                 </svg>
                 <h3 class="text-lg font-medium text-white mb-1">No albums found</h3>
-                <p class="text-slate-400 text-sm">There are no albums in this artist's catalog yet.</p>
+                <p class="text-slate-400 text-m">There are no albums in this artist's catalog yet.</p>
+                <a href="{% url 'catalog:create_album' %}"
+                   class="mt-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-md transition shadow-lg shadow-indigo-500/20">
+                    + Add Album
+                </a>
             </div>
         {% endfor %}
     </div>
@@ -136,8 +92,6 @@
         function toggleTracklist() {
             const extraTracks = document.querySelectorAll('.expandable-track');
             const btn = document.getElementById('expand-tracks-btn');
-
-            // Check current state based on button text
             const isExpanding = btn.innerText.trim().toUpperCase() === 'SHOW MORE';
 
             extraTracks.forEach(track => {
@@ -147,8 +101,6 @@
                     track.classList.add('hidden');
                 }
             });
-
-            // Toggle the button text
             btn.innerText = isExpanding ? 'SHOW LESS' : 'SHOW MORE';
         }
     </script>
