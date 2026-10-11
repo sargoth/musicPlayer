@@ -10,3 +10,5 @@ urlpatterns = [
     path('', include('tracks.urls')),
     path('', include('playlists.urls'))
 ]
+
+handler404 = "django.views.defaults.page_not_found"

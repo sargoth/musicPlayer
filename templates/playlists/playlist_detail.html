@@ -34,11 +34,11 @@
                 <p class="text-slate-400 text-sm mb-4 max-w-sm">{{ playlist.description }}</p>
             {% endif %}
             <div class="flex flex-wrap items-center gap-3">
-                <a href="#"
+                <a href="{% url 'playlists:edit_playlist' playlist.pk %}"
                    class="text-slate-400 hover:text-white transition text-sm font-medium px-4 py-2 border border-slate-700 rounded-full hover:bg-slate-800">
                     Edit Playlist
                 </a>
-                <a href="#"
+                <a href="{% url 'playlists:delete_playlist' playlist.pk %}"
                    class="text-slate-400 hover:text-white transition text-sm font-medium px-4 py-2 border border-slate-700 rounded-full hover:bg-slate-800">
                     Delete Playlist
                 </a>

@@ -1,0 +1,12 @@
+{% extends 'edit_base_form.html' %}
+
+{% block edit_title %}
+    Edit Playlist
+{% endblock %}
+
+{% block cancel_button %}
+    <a href="{% url 'playlists:playlist_detail' playlist.pk %}"
+       class="text-sm font-medium text-slate-400 hover:text-white transition px-4 py-2">
+        Cancel
+    </a>
+{% endblock %}

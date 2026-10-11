@@ -1,0 +1,16 @@
+{% extends 'delete_base_form.html' %}
+
+{% block delete_title %}
+    Remove Playlist?
+{% endblock %}
+
+{% block delete_message %}
+    Are you sure you want to remove the playlist <strong class="text-white">"{{ playlist.title }}"</strong>? This action cannot be undone!
+{% endblock %}
+
+{% block cancel_button %}
+    <a href="{% url 'playlists:playlist_detail' playlist.pk %}"
+       class="w-full sm:w-auto px-6 py-2.5 text-sm font-medium text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-lg transition border border-slate-700">
+        Cancel
+    </a>
+{% endblock %}

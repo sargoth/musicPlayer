@@ -1,11 +1,11 @@
 from typing import Any
 
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from playlists.forms import PlaylistForm
 from playlists.models import Playlist
@@ -55,3 +55,21 @@ class RemoveTrackFromPlaylistView(View):
         playlist.tracks.remove(track_pk)
 
         return redirect("playlists:playlist_detail", pk=playlist_pk)
+
+
+class PlaylistDeleteView(DeleteView):
+    model = Playlist
+    template_name = "playlists/delete_playlist.html"
+    fields = "__all__"
+    success_url = reverse_lazy("playlists:list_playlists")
+
+
+class PlaylistEditView(UpdateView):
+    model = Playlist
+    form_class = PlaylistForm
+    context_object_name = "playlist"
+    template_name = "playlists/edit_playlist.html"
+    success_url = reverse_lazy("playlists:list_playlists")
+
+    def get_success_url(self) -> str:
+        return reverse("playlists:playlist_detail", kwargs={"pk": self.object.pk})
