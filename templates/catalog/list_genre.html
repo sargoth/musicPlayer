@@ -9,7 +9,7 @@
         {% for genre in genres %}
             <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 flex items-center justify-between hover:border-slate-700 transition shadow-md">
                 <div>
-                    <h3 class="font-bold text-white text-base">{{ genre.name }}</h3>
+                    <h3 class="font-bold text-white text-base">{{ genre.get_name_display|capfirst }}</h3>
                     <p class="text-xs text-slate-400 mt-1">
                         {{ genre.artists.count }} artist{{ genre.artists.count|pluralize }}
                     </p>

@@ -11,9 +11,9 @@
                          alt="{{ artist.name }}"
                          class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                 </div>
-                <h3 class="font-bold text-lg text-white mb-1 group-hover:text-indigo-400 transition">{{ artist.name }}</h3>
+                <h3 class="font-bold text-lg text-white mb-1 group-hover:text-indigo-400 transition">{{ artist.name|title }}</h3>
                 <p class="text-xs text-slate-400 line-clamp-1">
-                    {{ artist.genres.all|join:", " }}
+                    {{ artist.genres.all|join:", "|capfirst }}
                 </p>
             </a>
         {% empty %}

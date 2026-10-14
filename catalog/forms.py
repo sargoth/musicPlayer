@@ -40,6 +40,11 @@ class CreateArtistForm(forms.ModelForm):
             }),
             "genres": forms.CheckboxSelectMultiple()
         }
+        error_messages = {
+            "genres": {
+                "required": "You must select at least 1 genre."
+            }
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -61,7 +66,7 @@ class GenreForm(forms.ModelForm):
         model = Genre
         fields = ["name"]
         widgets = {
-            "name": forms.TextInput(attrs={
+            "name": forms.Select(attrs={
                 "class": "w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition"
             })
         }

@@ -1,7 +1,9 @@
 from django.db import models
 
+from musicPlayer.models import TimeStampModel
 
-class Playlist(models.Model):
+
+class Playlist(TimeStampModel):
     DEFAULT_PLAYLIST_COVER = "https://images.unsplash.com/photo-1637231065247-016aed55c648"
 
     title = models.CharField(
@@ -19,14 +21,6 @@ class Playlist(models.Model):
         blank=True,
         help_text="The URL for the playlist cover.",
         default=DEFAULT_PLAYLIST_COVER
-    )
-
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
-
-    updated_at = models.DateTimeField(
-        auto_now=True
     )
 
     tracks = models.ManyToManyField(

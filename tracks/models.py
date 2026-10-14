@@ -12,7 +12,8 @@ class Track(models.Model):
     duration_in_seconds = models.PositiveIntegerField(
         validators=[
             MinValueValidator(1, message="The duration must be 1 second or more.")
-        ]
+        ],
+        help_text="Automatically calculated once track URL is provided."
     )
 
     track_url = models.URLField(

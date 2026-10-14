@@ -4,12 +4,28 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.text import slugify
 
+from musicPlayer.models import TimeStampModel
 from tracks.models import Track
 
 
 class Genre(models.Model):
+    class GenreChoices(models.TextChoices):
+        ROCK = "rock", "Rock"
+        POP = "pop", "Pop"
+        RAP = "rap", "Rap"
+        HIP_HOP = "hip_hop", "Hip-Hop"
+        ELECTRONIC = "electronic", "Electronic"
+        JAZZ = "jazz", "Jazz"
+        CLASSICAL = "classical", "Classical"
+        R_AND_B = "r_and_b", "R&B"
+        INDIE = "indie", "Indie"
+        METAL = "metal", "Metal"
+        LO_FI = "lo_fi", "Lo-Fi"
+        OTHER = "other", "Other"
+
     name = models.CharField(
         max_length=50,
+        choices=GenreChoices.choices,
         unique=True,
         help_text="Enter a unique music genre (eg., Rock, Hip-Hop)."
     )
@@ -25,7 +41,7 @@ class Genre(models.Model):
         ordering = ["name"]
 
     def __str__(self) -> str:
-        return self.name
+        return self.get_name_display()
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -71,7 +87,7 @@ class Artist(models.Model):
         super().save(*args, **kwargs)
 
 
-class Album(models.Model):
+class Album(TimeStampModel):
     DEFAULT_ALBUM_IMAGE = "https://plus.unsplash.com/premium_photo-1682125896993-12a1758b6cb3"
 
     title = models.CharField(

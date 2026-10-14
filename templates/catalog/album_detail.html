@@ -10,7 +10,7 @@
             </div>
             <div class="flex flex-col gap-1 mb-6 text-sm text-slate-400">
                 <p>
-                    <span class="font-semibold text-slate-300">{{ tracks|length }} songs | {{ album.total_duration|default:"0:00" }} minutes</span>
+                    <span class="font-semibold text-slate-300">{{ album.tracks.all|length }} songs | {{ album.total_duration|default:"0:00" }} minutes</span>
                 </p>
             </div>
             <div class="flex flex-wrap items-center gap-3">
