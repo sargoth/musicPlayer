@@ -21,6 +21,14 @@
                             {% if field.help_text %}
                                 <p class="mt-1 text-xs text-slate-500">{{ field.help_text }}</p>
                             {% endif %}
+
+                            {% if field.errors %}
+                                {% for error in field.errors %}
+                                    <p class="mt-1 text-xs text-red-400 font-medium flex items-center gap-1">
+                                        <span>•</span> {{ error }}
+                                    </p>
+                                {% endfor %}
+                            {% endif %}
                         </div>
                     {% endfor %}
                 {% endblock %}

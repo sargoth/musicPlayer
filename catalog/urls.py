@@ -6,18 +6,18 @@ app_name = 'catalog'
 
 urlpatterns = [
     path('artists/', include([
-        path('', views.list_all_artists_view, name='list_artists'),
-        path('create/', views.create_artist_view, name='create_artist'),
-        path('<int:pk>/', views.artist_details_view, name='artist_detail'),
-        path('<int:pk>/delete/', views.delete_artist_view, name='delete_artist'),
-        path('<int:pk>/edit/', views.edit_artist_view, name='edit_artist')
+        path('', views.ArtistListView.as_view(), name='list_artists'),
+        path('create/', views.ArtistCreateView.as_view(), name='create_artist'),
+        path('<int:pk>/', views.ArtistDetailsView.as_view(), name='artist_detail'),
+        path('<int:pk>/delete/', views.ArtistDeleteView.as_view(), name='delete_artist'),
+        path('<int:pk>/edit/', views.ArtistUpdateView.as_view(), name='edit_artist')
     ])),
     path('albums/', include([
-        path('', views.list_all_albums_view, name='list_albums'),
-        path('create/', views.create_album_view, name='create_album'),
-        path('<int:pk>/', views.album_details_view, name='album_detail'),
-        path('<int:pk>/delete/', views.delete_album_view, name='delete_album'),
-        path('<int:pk>/edit/', views.edit_album_view, name='edit_album')
+        path('', views.AlbumListView.as_view(), name='list_albums'),
+        path('create/', views.AlbumCreateView.as_view(), name='create_album'),
+        path('<int:pk>/', views.AlbumDetailsView.as_view(), name='album_detail'),
+        path('<int:pk>/delete/', views.AlbumDeleteView.as_view(), name='delete_album'),
+        path('<int:pk>/edit/', views.AlbumUpdateView.as_view(), name='edit_album')
     ])),
     path('genres/', include([
         path('', views.GenreListView.as_view(), name='list_genres'),

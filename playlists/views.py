@@ -7,12 +7,13 @@ from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
+from musicPlayer.mixins import InvalidTurboFormMixin
 from playlists.forms import PlaylistForm
 from playlists.models import Playlist
 from tracks.models import Track
 
 
-class PlaylistCreateView(CreateView):
+class PlaylistCreateView(InvalidTurboFormMixin, CreateView):
     model = Playlist
     form_class = PlaylistForm
     template_name = "playlists/create_playlist.html"
@@ -64,7 +65,7 @@ class PlaylistDeleteView(DeleteView):
     success_url = reverse_lazy("playlists:list_playlists")
 
 
-class PlaylistEditView(UpdateView):
+class PlaylistEditView(InvalidTurboFormMixin, UpdateView):
     model = Playlist
     form_class = PlaylistForm
     context_object_name = "playlist"

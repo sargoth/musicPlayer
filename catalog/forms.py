@@ -1,3 +1,5 @@
+import datetime
+
 from django import forms
 from .models import Album, Artist, Genre
 
@@ -15,6 +17,17 @@ class CreateAlbumForm(forms.ModelForm):
 
         for field in self.fields.values():
             field.widget.attrs.update({"class": form_css})
+
+    def clean_release_year(self):
+        year = self.cleaned_data.get("release_year")
+        current_year = datetime.date.today().year
+
+        if year and (year < 1860 or year > current_year):
+            raise forms.ValidationError(
+                f"Please enter a valid year between 1860 and {current_year}"
+            )
+
+        return year
 
 
 class CreateArtistForm(forms.ModelForm):

@@ -1,3 +1,6 @@
+import datetime
+
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.text import slugify
 
@@ -76,6 +79,10 @@ class Album(models.Model):
         help_text="Official title of the album"
     )
     release_year = models.PositiveIntegerField(
+        validators=[
+            MinValueValidator(1860, message="Release year must be after 1860."),
+            MaxValueValidator(datetime.date.today().year, message="Release year cannot be in the future.")
+        ],
         help_text="Album release year (eg., 2026)"
     )
     cover_image_url = models.URLField(

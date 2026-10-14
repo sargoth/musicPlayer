@@ -30,7 +30,7 @@
         </div>
         <div class="w-full lg:w-2/3">
             <div class="flex flex-col gap-1">
-                {% for track in tracks %}
+                {% for track in album.tracks.all %}
                     <div class="group grid grid-cols-[3rem_1fr_auto_2rem] gap-4 px-4 py-3 items-center hover:bg-slate-800/60 rounded-lg transition duration-200 border border-transparent hover:border-slate-700/50">
                         <div class="relative w-full flex items-center justify-center">
                             <span class="text-slate-500 text-sm group-hover:hidden">{{ forloop.counter }}</span>

@@ -1,141 +1,96 @@
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 
 from catalog.forms import CreateAlbumForm, CreateArtistForm, GenreForm
+from musicPlayer.mixins import InvalidTurboFormMixin
 from catalog.models import Album, Artist, Genre
 from tracks.models import Track
 
 
-def list_all_artists_view(request: HttpRequest) -> HttpResponse:
-    artists = Artist.objects.prefetch_related("genres").all()
-    context = {
-        "artists": artists
-    }
+class ArtistListView(ListView):
+    model = Artist
+    template_name = "catalog/list_artists.html"
+    context_object_name = "artists"
 
-    return render(request, "catalog/list_artists.html", context)
-
-
-def list_all_albums_view(request: HttpRequest) -> HttpResponse:
-    albums = Album.objects.select_related("artist").all()
-    context = {
-        "albums": albums
-    }
-
-    return render(request, "catalog/list_albums.html", context)
+    def get_queryset(self):
+        return Artist.objects.prefetch_related("genres").all()
 
 
-def album_details_view(request: HttpRequest, pk: int) -> HttpResponse:
-    album = get_object_or_404(Album.objects.select_related("artist"), pk=pk)
-    tracks = album.tracks.all()
-    context = {
-        "album": album,
-        "tracks": tracks
-    }
+class AlbumListView(ListView):
+    model = Album
+    template_name = "catalog/list_albums.html"
+    context_object_name = "albums"
 
-    return render(request, "catalog/album_detail.html", context)
+    def get_queryset(self):
+        return Album.objects.select_related("artist").all()
 
 
-def artist_details_view(request: HttpRequest, pk: int) -> HttpResponse:
-    artist = get_object_or_404(Artist.objects.prefetch_related("albums"), pk=pk)
-    tracks = Track.objects.filter(album__artist=artist)
-    context = {
-        "artist": artist,
-        "tracks": tracks
-    }
+class AlbumDetailsView(DetailView):
+    model = Album
+    template_name = "catalog/album_detail.html"
+    context_object_name = "album"
 
-    return render(request, "catalog/artist_detail.html", context)
+    def get_queryset(self):
+        return Album.objects.select_related("artist").prefetch_related("tracks")
 
 
-def create_album_view(request: HttpRequest) -> HttpResponse:
-    form = CreateAlbumForm(request.POST or None)
+class ArtistDetailsView(DetailView):
+    model = Artist
+    template_name = "catalog/artist_detail.html"
+    context_object_name = "artist"
 
-    if request.method == "POST" and form.is_valid():
-        form.save()
-        return redirect("catalog:list_albums")
+    queryset = Artist.objects.prefetch_related("albums")
 
-    context = {
-        "form": form
-    }
-
-    return render(request, "catalog/create_album.html", context)
-
-
-def delete_album_view(request: HttpRequest, pk: int) -> HttpResponse:
-    album = get_object_or_404(Album, pk=pk)
-
-    if request.method == "POST":
-        album.delete()
-        return redirect("catalog:list_albums")
-
-    context = {
-        "album": album
-    }
-
-    return render(request, "catalog/delete_album.html", context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["tracks"] = Track.objects.filter(album__artist=self.object).select_related("album")
+        return context
 
 
-def create_artist_view(request: HttpRequest) -> HttpResponse:
-    form = CreateArtistForm(request.POST or None)
-
-    if request.method == "POST" and form.is_valid():
-        form.save()
-        return redirect("catalog:list_artists")
-
-    context = {
-        "form": form
-    }
-
-    return render(request, "catalog/create_artist.html", context)
+class AlbumCreateView(InvalidTurboFormMixin, CreateView):
+    model = Album
+    template_name = "catalog/create_album.html"
+    form_class = CreateAlbumForm
+    success_url = reverse_lazy("catalog:list_albums")
 
 
-def delete_artist_view(request: HttpRequest, pk: int) -> HttpResponse:
-    artist = get_object_or_404(Artist, pk=pk)
-
-    if request.method == "POST":
-        artist.delete()
-        return redirect("catalog:list_artists")
-
-    context = {
-        "artist": artist
-    }
-
-    return render(request, "catalog/delete_artist.html", context)
+class AlbumDeleteView(DeleteView):
+    model = Album
+    template_name = "catalog/delete_album.html"
+    success_url = reverse_lazy("catalog:list_albums")
 
 
-def edit_album_view(request: HttpRequest, pk: int) -> HttpResponse:
-    album = get_object_or_404(Album, pk=pk)
-    form = CreateAlbumForm(request.POST or None, instance=album)
-
-    if request.method == "POST" and form.is_valid():
-        form.save()
-        return redirect('catalog:album_detail', pk=album.pk)
-
-    context = {
-        "album": album,
-        "form": form
-    }
-
-    return render(request, "catalog/edit_album.html", context)
+class ArtistCreateView(InvalidTurboFormMixin, CreateView):
+    model = Artist
+    template_name = "catalog/create_artist.html"
+    form_class = CreateArtistForm
+    success_url = reverse_lazy("catalog:list_artists")
 
 
-def edit_artist_view(request: HttpRequest, pk: int) -> HttpResponse:
-    artist = get_object_or_404(Artist, pk=pk)
-    form = CreateArtistForm(request.POST or None, instance=artist)
+class ArtistDeleteView(DeleteView):
+    model = Artist
+    template_name = "catalog/delete_artist.html"
+    success_url = reverse_lazy("catalog:list_artists")
 
-    if request.method == "POST" and form.is_valid():
-        form.save()
-        return redirect('catalog:artist_detail', pk=artist.pk)
 
-    context = {
-        "artist": artist,
-        "form": form
-    }
+class AlbumUpdateView(InvalidTurboFormMixin, UpdateView):
+    model = Album
+    template_name = "catalog/edit_album.html"
+    form_class = CreateAlbumForm
 
-    return render(request, "catalog/edit_artist.html", context)
+    def get_success_url(self) -> str:
+        return reverse("catalog:album_detail", kwargs={"pk": self.object.pk})
+
+
+class ArtistUpdateView(InvalidTurboFormMixin, UpdateView):
+    model = Artist
+    template_name = "catalog/edit_artist.html"
+    form_class = CreateArtistForm
+
+    def get_success_url(self) -> str:
+        return reverse("catalog:artist_detail", kwargs={"pk": self.object.pk})
 
 
 class GenreListView(ListView):
@@ -144,7 +99,7 @@ class GenreListView(ListView):
     context_object_name = "genres"
 
 
-class GenreCreateView(CreateView):
+class GenreCreateView(InvalidTurboFormMixin, CreateView):
     model = Genre
     template_name = "catalog/create_genre.html"
     form_class = GenreForm
@@ -159,7 +114,7 @@ class GenreCreateView(CreateView):
         return super().get_success_url()
 
 
-class GenreUpdateView(UpdateView):
+class GenreUpdateView(InvalidTurboFormMixin, UpdateView):
     model = Genre
     template_name = "catalog/edit_genre.html"
     form_class = GenreForm
