@@ -19,4 +19,12 @@ urlpatterns = [
         path('<int:pk>/delete/', views.delete_album_view, name='delete_album'),
         path('<int:pk>/edit/', views.edit_album_view, name='edit_album')
     ])),
+    path('genres/', include([
+        path('', views.GenreListView.as_view(), name='list_genres'),
+        path('create/', views.GenreCreateView.as_view(), name='create_genre'),
+        path('<int:pk>/', include([
+            path('edit/', views.GenreUpdateView.as_view(), name='edit_genre'),
+            path('delete/', views.GenreDeleteView.as_view(), name='delete_genre')
+        ]))
+    ]))
 ]

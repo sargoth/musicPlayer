@@ -1,8 +1,12 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.list import ListView
 
-from catalog.forms import CreateAlbumForm, CreateArtistForm
-from catalog.models import Album, Artist
+from catalog.forms import CreateAlbumForm, CreateArtistForm, GenreForm
+from catalog.models import Album, Artist, Genre
 from tracks.models import Track
 
 
@@ -132,3 +136,37 @@ def edit_artist_view(request: HttpRequest, pk: int) -> HttpResponse:
     }
 
     return render(request, "catalog/edit_artist.html", context)
+
+
+class GenreListView(ListView):
+    model = Genre
+    template_name = "catalog/list_genre.html"
+    context_object_name = "genres"
+
+
+class GenreCreateView(CreateView):
+    model = Genre
+    template_name = "catalog/create_genre.html"
+    form_class = GenreForm
+    success_url = reverse_lazy("catalog:list_genres")
+
+    def get_success_url(self) -> str:
+        origin_url = self.request.GET.get("next") or self.request.POST.get("next")
+
+        if origin_url:
+            return origin_url
+
+        return super().get_success_url()
+
+
+class GenreUpdateView(UpdateView):
+    model = Genre
+    template_name = "catalog/edit_genre.html"
+    form_class = GenreForm
+    success_url = reverse_lazy("catalog:list_genres")
+
+
+class GenreDeleteView(DeleteView):
+    model = Genre
+    template_name = "catalog/delete_genre.html"
+    success_url = reverse_lazy("catalog:list_genres")

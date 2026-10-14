@@ -1,0 +1,20 @@
+{% extends 'base_form.html' %}
+
+{% block form_title %}
+    Add New Genre
+{% endblock %}
+
+{% block form_subtitle %}
+    Expand the community library by adding a new genre.
+{% endblock %}
+
+{% block cancel_button %}
+    <a href="{% url 'catalog:list_genres' %}"
+       class="text-sm font-medium text-slate-400 hover:text-white transition px-4 py-2">
+        Cancel
+    </a>
+{% endblock %}
+
+{% block submit_button %}
+    Add Genre
+{% endblock %}

@@ -8,8 +8,16 @@
     Expand the community library by adding a new artist.
 {% endblock %}
 
+{% block add_genre_button %}
+    <a href="{% url 'catalog:create_genre' %}?next={{ request.path }}"
+       class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-indigo-400 text-sm font-medium rounded-lg border border-slate-700 transition inline-block">
+        + Add Genre
+    </a>
+{% endblock %}
+
 {% block cancel_button %}
-    <a href="{% url 'catalog:list_artists' %}" class="text-sm font-medium text-slate-400 hover:text-white transition px-4 py-2">
+    <a href="{% url 'catalog:list_artists' %}"
+       class="text-sm font-medium text-slate-400 hover:text-white transition px-4 py-2">
         Cancel
     </a>
 {% endblock %}

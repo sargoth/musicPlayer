@@ -1,5 +1,5 @@
 from django import forms
-from .models import Album, Artist
+from .models import Album, Artist, Genre
 
 
 class CreateAlbumForm(forms.ModelForm):
@@ -41,3 +41,14 @@ class CreateArtistForm(forms.ModelForm):
                 field.widget.attrs.update({
                     "class": "rounded bg-slate-900 border-slate-700 text-white focus:ring-indigo-500"
                 })
+
+
+class GenreForm(forms.ModelForm):
+    class Meta:
+        model = Genre
+        fields = ["name"]
+        widgets = {
+            "name": forms.TextInput(attrs={
+                "class": "w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition"
+            })
+        }

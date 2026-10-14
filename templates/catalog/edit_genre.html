@@ -1,0 +1,12 @@
+{% extends 'edit_base_form.html' %}
+
+{% block edit_title %}
+    Edit Genre
+{% endblock %}
+
+{% block cancel_button %}
+    <a href="{% url 'catalog:list_genres' %}"
+       class="text-sm font-medium text-slate-400 hover:text-white transition px-4 py-2">
+        Cancel
+    </a>
+{% endblock %}
