@@ -13,6 +13,7 @@ class ArtistListView(ListView):
     model = Artist
     template_name = "catalog/list_artists.html"
     context_object_name = "artists"
+    paginate_by = 10
 
     def get_queryset(self):
         return Artist.objects.prefetch_related("genres").all()
@@ -22,6 +23,7 @@ class AlbumListView(ListView):
     model = Album
     template_name = "catalog/list_albums.html"
     context_object_name = "albums"
+    paginate_by = 10
 
     def get_queryset(self):
         return Album.objects.select_related("artist").all()
@@ -97,6 +99,7 @@ class GenreListView(ListView):
     model = Genre
     template_name = "catalog/list_genre.html"
     context_object_name = "genres"
+    paginate_by = 12
 
 
 class GenreCreateView(InvalidTurboFormMixin, CreateView):

@@ -20,4 +20,5 @@
             {% include 'includes/../empty_state.html' with empty_state_title="No artists found" empty_state_message="There are no artists in the catalog yet." %}
         {% endfor %}
     </div>
+    {% include "pagination.html" %}
 {% endblock %}

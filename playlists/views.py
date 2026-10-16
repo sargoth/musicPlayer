@@ -24,6 +24,7 @@ class PlaylistListView(ListView):
     model = Playlist
     template_name = "playlists/list_playlists.html"
     context_object_name = "playlists"
+    paginate_by = 10
 
 
 class PlaylistDetailView(DetailView):
