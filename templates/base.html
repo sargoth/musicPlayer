@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <title>{% block title %}musicPlayer | Community Audio Hub{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="module" src="https://unpkg.com/@hotwired/turbo@8.0.4/dist/turbo.es2017-esm.js"></script>
@@ -58,7 +59,7 @@
     </div>
 </div>
 <script>
-    function playTrack(audioUrl, title, artist, coverUrl) {
+    function playTrack(audioUrl, title, artist, coverUrl, trackId) {
         const audio = document.getElementById('global-audio-element');
         const titleElem = document.getElementById('player-title');
         const artistElem = document.getElementById('player-artist');
@@ -75,6 +76,21 @@
         audio.play().catch(function (error) {
             console.warn("Playback interrupted or waiting for user interaction:", error);
         });
+
+        // Trigger background count increment if a track ID is provided
+        if (trackId) {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+            fetch(`/tracks/${trackId}/play/`, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": csrfToken,
+                    "X-Requested-With": "XMLHttpRequest",
+                },
+            }).catch(error => {
+                console.error("Failed to increment play count:", error);
+            });
+        }
     }
 </script>
 <script>

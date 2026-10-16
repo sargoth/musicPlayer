@@ -1,6 +1,7 @@
 from typing import Any
 
 from django.apps import apps
+from django.db.models import F
 from django.http import HttpRequest, HttpResponse, HttpResponseBase
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
@@ -48,3 +49,11 @@ class TrackDeleteView(DeleteView):
 
     def get_success_url(self) -> str:
         return reverse("catalog:album_detail", kwargs={"pk": self.object.album.pk})
+
+
+def track_times_played_view(request, pk: int) -> HttpResponse:
+    track = get_object_or_404(Track, pk=pk)
+    Track.objects.filter(pk=track.pk).update(times_played=F("times_played") + 1)
+
+    return HttpResponse(status=204)
+

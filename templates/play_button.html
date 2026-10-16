@@ -1,0 +1,4 @@
+<button onclick="playTrack('{{ track.track_url }}', '{{ track.title|escapejs }}', '{{ track.album.artist.name|escapejs }}', '{{ track.album.cover_image_url }}', {{ track.pk }})"
+        class="{{ button_class|default:'w-10 h-10 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center transition' }}">
+    ▶
+</button>

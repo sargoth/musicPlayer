@@ -32,11 +32,7 @@
                 <div class="group grid grid-cols-[3rem_1fr_auto] gap-4 px-4 py-3 items-center hover:bg-slate-800/60 rounded-lg transition duration-200 border border-transparent hover:border-slate-700/50 {% if forloop.counter > 5 %}hidden expandable-track{% endif %}">
                     <div class="relative w-full flex items-center justify-center">
                         <span class="text-slate-500 text-sm group-hover:hidden">{{ forloop.counter }}</span>
-                        <button
-                                onclick="playTrack('{{ track.track_url }}', '{{ track.title }}', '{{ track.album.artist.name }}', '{{ track.album.cover_image_url }}')"
-                                class="hidden group-hover:flex text-indigo-400 hover:text-indigo-300 transition">
-                            ▶
-                        </button>
+                        {% include "play_button.html" with button_class="hidden group-hover:flex w-6 h-6 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white items-center justify-center transition" %}
                     </div>
                     <div class="font-medium text-slate-200 group-hover:text-white transition">
                         {{ track.title }}

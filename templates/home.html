@@ -37,10 +37,7 @@
             {% for track in popular_tracks %}
                 <div class="p-4 flex items-center justify-between hover:bg-slate-800/50 transition">
                     <div class="flex items-center gap-4">
-                        <button onclick="playTrack('{{ track.track_url }}', '{{ track.title }}', '{{ track.album.artist.name }}', '{{ track.album.cover_image_url }}')"
-                                class="w-10 h-10 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center transition">
-                            ▶
-                        </button>
+                        {% include "play_button.html" %}
                         <div>
                             <div class="font-semibold text-sm text-white">{{ track.title }}</div>
                             <div class="text-xs text-slate-400">{{ track.album.artist.name }}
