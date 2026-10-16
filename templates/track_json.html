@@ -1,0 +1,13 @@
+<script id="{{ script_id|default:'tracks-json' }}" type="application/json">
+[
+    {% for track in tracks %}
+        {
+            "id": {{ track.pk }},
+            "title": "{{ track.title|escapejs }}",
+            "artist": "{{ track.album.artist.name|escapejs }}",
+            "cover_url": "{{ track.album.cover_image_url }}",
+            "track_url": "{{ track.track_url }}"
+        }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+]
+</script>

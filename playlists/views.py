@@ -34,7 +34,7 @@ class PlaylistDetailView(DetailView):
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        tracks = self.object.tracks.select_related("album", "album").all()
+        tracks = self.object.tracks.select_related("album", "album__artist").all()
         context["tracks"] = tracks
 
         return context

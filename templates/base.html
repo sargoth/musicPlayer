@@ -30,68 +30,177 @@
 <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
     {% block content %}{% endblock %}
 </main>
-<div id="global-music-player" data-turbo-permanent
-     class="fixed bottom-0 left-0 right-0 z-50 bg-slate-900 border-t border-slate-800 p-4 shadow-2xl">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-        <div class="flex items-center gap-3 w-full md:w-1/4">
-            <div id="player-cover"
-                 class="w-12 h-12 bg-slate-800 rounded flex items-center justify-center overflow-hidden">
-                <svg class="w-6 h-6 text-slate-600" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
-                </svg>
-            </div>
-            <div class="truncate">
-                <div id="player-title" class="font-medium text-sm text-slate-200 truncate">Select a track to play</div>
-                <div id="player-artist" class="text-xs text-slate-400 truncate">Global Audio Library</div>
-            </div>
-        </div>
-        <div class="w-full md:w-2/4">
-            <audio id="global-audio-element" controls class="w-full h-10 accent-indigo-500">
-                <source id="audio-source" src="" type="audio/mpeg">
-                Your browser does not support HTML5 audio.
-            </audio>
-        </div>
 
-        <div class="hidden md:block w-1/4 text-right text-xs text-slate-500">
-            Community Jukebox
-        </div>
+{% include 'footer.html' %}
 
-    </div>
-</div>
 <script>
+    // 1. Safe Global State Initialization (Prevents Turbo redeclaration crashes)
+    window.currentQueue = window.currentQueue || [];
+    window.currentQueueIndex = window.currentQueueIndex || 0;
+    window.isShuffle = window.isShuffle || false;
+
+    // Fast aliases for local script scope using 'var'
+    var currentQueue = window.currentQueue;
+    var currentQueueIndex = window.currentQueueIndex;
+
+    // 2. Play a Track (integrates with contextual queue when available)
     function playTrack(audioUrl, title, artist, coverUrl, trackId) {
+        // If track is already in the current active queue, jump to its index
+        let foundIndex = -1;
+        if (window.currentQueue && window.currentQueue.length > 0) {
+            foundIndex = window.currentQueue.findIndex(t => (trackId && t.id === trackId) || (audioUrl && t.track_url === audioUrl));
+        }
+
+        if (foundIndex !== -1) {
+            window.currentQueueIndex = foundIndex;
+            currentQueueIndex = foundIndex;
+            loadAndPlayTrack(window.currentQueue[foundIndex]);
+            return;
+        }
+
+        // Try loading queue from contextual tracks JSON in the current DOM
+        const jsonScript = document.getElementById('album-tracks-json') ||
+                           document.getElementById('playlist-tracks-json') ||
+                           document.getElementById('artist-tracks-json') ||
+                           document.getElementById('home-tracks-json') ||
+                           document.getElementById('tracks-json');
+        if (jsonScript) {
+            try {
+                const pageTracks = JSON.parse(jsonScript.textContent);
+                if (Array.isArray(pageTracks) && pageTracks.length > 0) {
+                    const pageIndex = pageTracks.findIndex(t => (trackId && t.id === trackId) || (audioUrl && t.track_url === audioUrl));
+                    if (pageIndex !== -1) {
+                        window.currentQueue = pageTracks;
+                        window.currentQueueIndex = pageIndex;
+                        currentQueue = window.currentQueue;
+                        currentQueueIndex = pageIndex;
+                        loadAndPlayTrack(window.currentQueue[pageIndex]);
+                        return;
+                    }
+                }
+            } catch (e) {
+                console.error("Error parsing track JSON:", e);
+            }
+        }
+
+        // Fallback: single-track queue
+        window.currentQueue = [{
+            track_url: audioUrl,
+            title: title,
+            artist: artist,
+            cover_url: coverUrl,
+            id: trackId
+        }];
+        window.currentQueueIndex = 0;
+        currentQueue = window.currentQueue;
+        currentQueueIndex = window.currentQueueIndex;
+
+        loadAndPlayTrack(window.currentQueue[0]);
+    }
+
+    // 3. Play an Entire Sequence (Album / Playlist)
+    function playAlbumQueue(tracksList) {
+        if (!tracksList || tracksList.length === 0) return;
+
+        window.currentQueue = tracksList;
+        window.currentQueueIndex = 0;
+        currentQueue = window.currentQueue;
+        currentQueueIndex = window.currentQueueIndex;
+
+        loadAndPlayTrack(window.currentQueue[0]);
+    }
+
+    // 4. Core Track Loader & API Execution
+    function loadAndPlayTrack(track) {
+        if (!track) return;
+
         const audio = document.getElementById('global-audio-element');
         const titleElem = document.getElementById('player-title');
         const artistElem = document.getElementById('player-artist');
         const coverContainer = document.getElementById('player-cover');
 
-        titleElem.textContent = title;
-        artistElem.textContent = artist || 'Unknown Artist';
+        if (titleElem) titleElem.textContent = track.title;
+        if (artistElem) artistElem.textContent = track.artist || 'Unknown Artist';
 
-        if (coverUrl) {
-            coverContainer.innerHTML = `<img src="${coverUrl}" alt="${title}" class="w-full h-full object-cover">`;
+        if (coverContainer) {
+            if (track.cover_url) {
+                coverContainer.innerHTML = `<img src="${track.cover_url}" alt="${track.title}" class="w-full h-full object-cover">`;
+            } else {
+                coverContainer.innerHTML = `
+                    <svg class="w-6 h-6 text-neutral-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                    </svg>`;
+            }
         }
 
-        audio.src = audioUrl;
-        audio.play().catch(function (error) {
-            console.warn("Playback interrupted or waiting for user interaction:", error);
-        });
+        if (audio) {
+            audio.src = track.track_url;
+            audio.play().catch(function (error) {
+                console.warn("Playback interrupted or waiting for user interaction:", error);
+            });
+        }
 
-        // Trigger background count increment if a track ID is provided
-        if (trackId) {
+        if (track.id) {
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
-            fetch(`/tracks/${trackId}/play/`, {
+            fetch(`/tracks/${track.id}/play/`, {
                 method: "POST",
                 headers: {
                     "X-CSRFToken": csrfToken,
                     "X-Requested-With": "XMLHttpRequest",
+                    "Accept": "text/html; turbo-stream, text/plain, */*",
                 },
-            }).catch(error => {
+            })
+            .then(response => {
+                if (response.headers.get("Content-Type")?.includes("turbo-stream")) {
+                    return response.text().then(html => Turbo.renderStreamMessage(html));
+                }
+            })
+            .catch(error => {
                 console.error("Failed to increment play count:", error);
             });
         }
     }
+
+    // Expose helpers globally
+    window.loadAndPlayTrack = loadAndPlayTrack;
+    window.playAlbumQueue = playAlbumQueue;
+    window.playTrack = playTrack;
+
+    // 5. Shared Next Track Handler (Fallback if not provided by player footer)
+    if (!window.handleNextTrack) {
+        window.handleNextTrack = function () {
+            const queue = window.currentQueue;
+            let index = window.currentQueueIndex;
+
+            if (!queue || queue.length === 0) return;
+
+            if (window.isShuffle) {
+                index = Math.floor(Math.random() * queue.length);
+            } else if (index < queue.length - 1) {
+                index++;
+            } else {
+                index = 0; // Wrap around to start of queue
+            }
+
+            window.currentQueueIndex = index;
+            currentQueueIndex = index;
+            loadAndPlayTrack(queue[index]);
+        };
+    }
+
+    // 6. Audio End Listener
+    document.addEventListener('DOMContentLoaded', () => {
+        const audio = document.getElementById('global-audio-element');
+        if (audio && !audio.dataset.hasEndedListener) {
+            audio.dataset.hasEndedListener = "true";
+            audio.addEventListener('ended', () => {
+                if (typeof window.handleNextTrack === 'function') {
+                    window.handleNextTrack();
+                }
+            });
+        }
+    });
 </script>
 <script>
     document.addEventListener('turbo:load', function () {

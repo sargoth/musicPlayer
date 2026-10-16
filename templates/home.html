@@ -37,7 +37,7 @@
             {% for track in popular_tracks %}
                 <div class="p-4 flex items-center justify-between hover:bg-slate-800/50 transition">
                     <div class="flex items-center gap-4">
-                        {% include "play_button.html" %}
+                        {% include "play_button.html" with button_icon="▶"%}
                         <div>
                             <div class="font-semibold text-sm text-white">{{ track.title }}</div>
                             <div class="text-xs text-slate-400">{{ track.album.artist.name }}
@@ -53,4 +53,5 @@
             {% endfor %}
         </div>
     </section>
+    {% include "track_json.html" with tracks=popular_tracks script_id="home-tracks-json" %}
 {% endblock %}
