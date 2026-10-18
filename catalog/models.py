@@ -40,7 +40,7 @@ class Genre(models.Model):
         max_length=50,
         choices=GenreChoices.choices,
         unique=True,
-        help_text="Enter a unique music genre (eg., Rock, Hip-Hop)."
+        help_text="Select a music genre (eg., Rock, Hip-Hop)."
     )
 
     slug = models.SlugField(

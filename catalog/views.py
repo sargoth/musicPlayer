@@ -121,13 +121,6 @@ class GenreCreateView(InvalidTurboFormMixin, CreateView):
         return super().get_success_url()
 
 
-class GenreUpdateView(InvalidTurboFormMixin, UpdateView):
-    model = Genre
-    template_name = "catalog/edit_genre.html"
-    form_class = GenreForm
-    success_url = reverse_lazy("catalog:list_genres")
-
-
 class GenreDeleteView(DeleteView):
     model = Genre
     template_name = "catalog/delete_genre.html"

@@ -23,7 +23,7 @@ urlpatterns = [
         path('', views.GenreListView.as_view(), name='list_genres'),
         path('create/', views.GenreCreateView.as_view(), name='create_genre'),
         path('<int:pk>/', include([
-            path('edit/', views.GenreUpdateView.as_view(), name='edit_genre'),
+            # path('edit/', views.GenreUpdateView.as_view(), name='edit_genre'),
             path('delete/', views.GenreDeleteView.as_view(), name='delete_genre')
         ]))
     ])),
