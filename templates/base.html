@@ -9,17 +9,36 @@
     <script type="module" src="https://unpkg.com/@hotwired/turbo@8.0.4/dist/turbo.es2017-esm.js"></script>
 </head>
 <body class="flex flex-col min-h-full pb-28">
-<header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+<header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+
+        <!-- Logo -->
         <a href="{% url 'home' %}"
-           class="flex items-center gap-2 font-bold text-xl text-indigo-400 hover:text-indigo-300 transition">
+           class="flex items-center gap-2 font-bold text-xl text-indigo-400 hover:text-indigo-300 transition flex-shrink-0">
             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
             </svg>
             <span>musicPlayer</span>
         </a>
 
-        <nav class="flex items-center gap-6 text-sm font-medium">
+        <!-- Global Search Input -->
+        <form action="{% url 'catalog:search' %}" method="GET" class="flex-1 max-w-md">
+            <div class="relative">
+                <input type="search"
+                       name="q"
+                       value="{{ request.GET.q|default:'' }}"
+                       placeholder="Search tracks, artists, albums..."
+                       class="w-full bg-slate-800/80 text-sm text-slate-100 placeholder-slate-400 border border-slate-700/60 rounded-full pl-10 pr-4 py-1.5 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition">
+                <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none"
+                     stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+            </div>
+        </form>
+
+        <!-- Navigation Links -->
+        <nav class="flex items-center gap-6 text-sm font-medium flex-shrink-0">
             <a href="{% url 'catalog:list_artists' %}" class="hover:text-indigo-400 transition">Artists</a>
             <a href="{% url 'catalog:list_albums' %}" class="hover:text-indigo-400 transition">Albums</a>
             <a href="{% url 'playlists:list_playlists' %}" class="hover:text-indigo-400 transition">Playlists</a>
@@ -60,10 +79,10 @@
 
         // Try loading queue from contextual tracks JSON in the current DOM
         const jsonScript = document.getElementById('album-tracks-json') ||
-                           document.getElementById('playlist-tracks-json') ||
-                           document.getElementById('artist-tracks-json') ||
-                           document.getElementById('home-tracks-json') ||
-                           document.getElementById('tracks-json');
+            document.getElementById('playlist-tracks-json') ||
+            document.getElementById('artist-tracks-json') ||
+            document.getElementById('home-tracks-json') ||
+            document.getElementById('tracks-json');
         if (jsonScript) {
             try {
                 const pageTracks = JSON.parse(jsonScript.textContent);
@@ -151,14 +170,14 @@
                     "Accept": "text/html; turbo-stream, text/plain, */*",
                 },
             })
-            .then(response => {
-                if (response.headers.get("Content-Type")?.includes("turbo-stream")) {
-                    return response.text().then(html => Turbo.renderStreamMessage(html));
-                }
-            })
-            .catch(error => {
-                console.error("Failed to increment play count:", error);
-            });
+                .then(response => {
+                    if (response.headers.get("Content-Type")?.includes("turbo-stream")) {
+                        return response.text().then(html => Turbo.renderStreamMessage(html));
+                    }
+                })
+                .catch(error => {
+                    console.error("Failed to increment play count:", error);
+                });
         }
     }
 
@@ -230,6 +249,22 @@
                 }
             });
         }
+    });
+</script>
+<script>
+    document.addEventListener('turbo:load', () => {
+        const searchInput = document.querySelector('header input[type="search"]');
+        if (!searchInput) return;
+
+        let debounceTimer;
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                if (e.target.value.trim().length >= 2 || e.target.value.trim().length === 0) {
+                    e.target.form.requestSubmit();
+                }
+            }, 500); // 500ms delay after typing stops
+        });
     });
 </script>
 </body>

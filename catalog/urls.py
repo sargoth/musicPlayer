@@ -26,5 +26,6 @@ urlpatterns = [
             path('edit/', views.GenreUpdateView.as_view(), name='edit_genre'),
             path('delete/', views.GenreDeleteView.as_view(), name='delete_genre')
         ]))
-    ]))
+    ])),
+    path('search/', views.SearchView.as_view(), name="search")
 ]

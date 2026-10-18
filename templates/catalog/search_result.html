@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Search Results for "{{ query }}" | musicPlayer
+{% endblock %}
+
+{% block content %}
+    <div class="space-y-10">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-100">
+                {% if query %}
+                    Search Results for <span class="text-indigo-400">"{{ query }}"</span>
+                {% else %}
+                    Search Music Library
+                {% endif %}
+            </h1>
+        </div>
+
+        {% if query %}
+            <!-- 1. Tracks Results -->
+            <section class="space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                    <h2 class="text-lg font-semibold text-slate-200">Tracks</h2>
+                    {% if tracks %}
+                        {% include "track_json.html" with tracks=tracks script_id="search-tracks-json" %}
+                        {% include "play_button.html" with button_text="Play All" onclick_action="playAlbumQueue(JSON.parse(document.getElementById('search-tracks-json').textContent))" button_class="hidden group-hover:flex w-6 h-6 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white items-center justify-center transition" %}
+                    {% endif %}
+                </div>
+
+                <div class="divide-y divide-slate-800/60">
+                    {% for track in tracks %}
+                        <div class="flex items-center justify-between py-2.5 px-3 hover:bg-slate-900/60 rounded-lg transition group">
+                            <div class="flex items-center gap-3">
+                                {% include "play_button.html" with track=track button_icon="▶" button_class="w-8 h-8 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center transition shadow" %}
+                                <div>
+                                    <div class="text-sm font-medium text-slate-200">{{ track.title }}</div>
+                                    <div class="text-xs text-slate-400">{{ track.album.artist.name }}
+                                        • {{ track.album.title }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="text-sm text-slate-500 py-2">No matching tracks found.</p>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- 2. Artists Results -->
+            <section class="space-y-4">
+                <h2 class="text-lg font-semibold text-slate-200 border-b border-slate-800 pb-2">Artists</h2>
+                <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4">
+                    {% for artist in artists %}
+                        <a href="{% url 'catalog:artist_detail' artist.pk %}"
+                           class="flex flex-col items-center p-3 bg-slate-900/40 hover:bg-slate-900 rounded-xl border border-slate-800/80 transition text-center group">
+                            <div class="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center mb-2 overflow-hidden border border-slate-700/50">
+                                {% if artist.image_url %}
+                                    <img src="{{ artist.image_url }}" alt="{{ artist.name }}"
+                                         class="w-full h-full object-cover">
+                                {% else %}
+                                    <span class="text-xl text-slate-500 font-bold">{{ artist.name|slice:":1" }}</span>
+                                {% endif %}
+                            </div>
+                            <span class="text-sm font-medium text-slate-200 group-hover:text-indigo-400 transition truncate w-full">{{ artist.name }}</span>
+                        </a>
+                    {% empty %}
+                        <p class="text-sm text-slate-500 col-span-full">No matching artists found.</p>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- 3. Albums Results -->
+            <section class="space-y-4">
+                <h2 class="text-lg font-semibold text-slate-200 border-b border-slate-800 pb-2">Albums</h2>
+                <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4">
+                    {% for album in albums %}
+                        <a href="{% url 'catalog:album_detail' album.pk %}"
+                           class="flex flex-col p-3 bg-slate-900/40 hover:bg-slate-900 rounded-xl border border-slate-800/80 transition group">
+                            <div class="aspect-square bg-slate-800 rounded-lg mb-2 overflow-hidden border border-slate-700/50">
+                                {% if album.cover_image_url %}
+                                    <img src="{{ album.cover_image_url }}" alt="{{ album.title }}"
+                                         class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                                {% endif %}
+                            </div>
+                            <span class="text-sm font-medium text-slate-200 group-hover:text-indigo-400 transition truncate">{{ album.title }}</span>
+                            <span class="text-xs text-slate-400 truncate">{{ album.artist.name }}</span>
+                        </a>
+                    {% empty %}
+                        <p class="text-sm text-slate-500 col-span-full">No matching albums found.</p>
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+    </div>
+{% endblock %}

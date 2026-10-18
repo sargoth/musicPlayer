@@ -1,4 +1,8 @@
+from typing import Any
+
+from django.db.models import Q
 from django.urls import reverse_lazy, reverse
+from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
@@ -128,3 +132,31 @@ class GenreDeleteView(DeleteView):
     model = Genre
     template_name = "catalog/delete_genre.html"
     success_url = reverse_lazy("catalog:list_genres")
+
+
+class SearchView(TemplateView):
+    template_name = "catalog/search_result.html"
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        query = self.request.GET.get("q").strip()
+
+        if query:
+            context["query"] = query
+            context["tracks"] = (
+                Track.objects.filter(
+                    Q(title__icontains=query) | Q(album__artist__name__icontains=query)
+                ).select_related("album", "album__artist")[:10]
+            )
+
+            context["albums"] = (
+                Album.objects.filter(
+                    Q(title__icontains=query) | Q(artist__name__icontains=query)
+                ).select_related("artist")[:8]
+            )
+
+            context["artists"] = Artist.objects.filter(
+                name__icontains=query
+            )[:8]
+
+        return context
