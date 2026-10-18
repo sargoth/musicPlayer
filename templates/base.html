@@ -51,7 +51,25 @@
 </main>
 
 {% include 'footer.html' %}
+<script>
+    function toggleDescription(button) {
+        const container = button.closest('.description-container');
+        if (!container) return;
 
+        const truncated = container.querySelector('.truncated-text');
+        const full = container.querySelector('.full-text');
+
+        if (full.classList.contains('hidden')) {
+            full.classList.remove('hidden');
+            truncated.classList.add('hidden');
+            button.textContent = 'Show less';
+        } else {
+            full.classList.add('hidden');
+            truncated.classList.remove('hidden');
+            button.textContent = 'Show more';
+        }
+    }
+</script>
 <script>
     // 1. Safe Global State Initialization (Prevents Turbo redeclaration crashes)
     window.currentQueue = window.currentQueue || [];
