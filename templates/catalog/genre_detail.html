@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}{{ genre.name }} Artists | musicPlayer{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Header Section -->
+    <div class="border-b border-slate-800 pb-6 flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-bold text-slate-100">{{ genre.name }}</h1>
+            {% if genre.description %}
+                <p class="text-sm text-slate-400 mt-2 max-w-2xl leading-relaxed">{{ genre.description }}</p>
+            {% endif %}
+        </div>
+        <a href="{% url 'catalog:list_genres' %}" 
+           class="text-xs font-medium text-slate-400 hover:text-white px-3 py-1.5 border border-slate-700 rounded-full hover:bg-slate-800 transition">
+            ← All Genres
+        </a>
+    </div>
+
+    <!-- Artists Grid -->
+    <section>
+        <h2 class="text-lg font-semibold text-slate-200 mb-4">
+            Artists in {{ genre.name }} ({{ artists|length }})
+        </h2>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {% for artist in artists %}
+                <a href="{% url 'catalog:artist_detail' artist.pk %}" 
+                   class="flex flex-col items-center p-4 bg-slate-900/40 hover:bg-slate-900 rounded-xl border border-slate-800/80 hover:border-indigo-500/50 transition duration-200 text-center group">
+                    <div class="w-20 h-20 rounded-full bg-slate-800 flex items-center justify-center mb-3 overflow-hidden border border-slate-700/50 group-hover:scale-105 transition duration-200">
+                        {% if artist.image_url %}
+                            <img src="{{ artist.image_url }}" alt="{{ artist.name }}" class="w-full h-full object-cover">
+                        {% else %}
+                            <span class="text-2xl text-slate-500 font-bold">{{ artist.name|slice:":1" }}</span>
+                        {% endif %}
+                    </div>
+                    <span class="text-sm font-medium text-slate-200 group-hover:text-indigo-400 transition truncate w-full">
+                        {{ artist.name }}
+                    </span>
+                </a>
+            {% empty %}
+                <p class="text-sm text-slate-500 col-span-full py-8 text-center">
+                    No artists found under this genre yet.
+                </p>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

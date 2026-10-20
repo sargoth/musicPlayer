@@ -153,3 +153,16 @@ class SearchView(TemplateView):
             )[:8]
 
         return context
+
+
+class GenreDetailView(DetailView):
+    model = Genre
+    template_name = "catalog/genre_detail.html"
+    context_object_name = "genre"
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        artists = Artist.objects.filter(genres=self.object).distinct()
+        context["artists"] = artists
+
+        return context

@@ -5,32 +5,41 @@
 {% block content %}
     {% include 'page_header.html' with header_title="Genres" button_link="catalog:create_genre" button_label="Add Genre" %}
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {% for genre in genres %}
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between hover:border-slate-700 transition shadow-md">
-                <div>
-                    <h3 class="font-bold text-white text-base">{{ genre.get_name_display|capfirst }}</h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    {% for genre in genres %}
+        <!-- Relative container to constrain the absolute overlay -->
+        <div class="relative group bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between hover:border-indigo-500/50 hover:bg-slate-800/80 transition shadow-md">
+
+            <!-- Main Content & Stretched Link -->
+            <div class="flex-1 min-w-0 pr-2">
+                <a href="{% url 'catalog:genre_detail' genre.slug %}"
+                   class="after:absolute after:inset-0 focus:outline-none">
+                    <h3 class="font-bold text-white text-base group-hover:text-indigo-400 transition truncate">
+                        {{ genre.get_name_display|capfirst }}
+                    </h3>
                     <p class="text-xs text-slate-400 mt-1">
                         {{ genre.artists.count }} artist{{ genre.artists.count|pluralize }}
                     </p>
-                </div>
+                </a>
+            </div>
 
-                <div class="flex items-center gap-2">
-                    <a href="{% url 'catalog:delete_genre' genre.pk %}"
-                       class="text-slate-400 hover:text-red-400 transition p-1.5 rounded-lg hover:bg-slate-800"
-                       title="Delete">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                        </svg>
-                    </a>
-                </div>
+            <!-- Nested Action (z-10 sits above the card overlay link) -->
+            <div class="relative z-10 flex items-center gap-2 flex-shrink-0">
+                <a href="{% url 'catalog:delete_genre' genre.pk %}"
+                   class="text-slate-400 hover:text-red-400 transition p-1.5 rounded-lg hover:bg-slate-700/80"
+                   title="Delete">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                </a>
             </div>
-        {% empty %}
-            <div class="col-span-full bg-slate-900/50 border border-slate-800 rounded-2xl p-8 text-center">
-                <p class="text-slate-400 text-m mb-4">No genres created yet.</p>
-            </div>
-        {% endfor %}
-    </div>
+        </div>
+    {% empty %}
+        <div class="col-span-full bg-slate-900/50 border border-slate-800 rounded-2xl p-8 text-center">
+            <p class="text-slate-400 text-base">No genres created yet.</p>
+        </div>
+    {% endfor %}
+</div>
     {% include "pagination.html" %}
 {% endblock %}
