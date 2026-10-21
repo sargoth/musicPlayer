@@ -6,7 +6,7 @@
             "title": "{{ track.title|escapejs }}",
             "artist": "{{ track.album.artist.name|escapejs }}",
             "cover_url": "{{ track.album.cover_image_url }}",
-            "track_url": "{{ track.track_url }}"
+            "final_url": "{{ track.final_url }}"
         }{% if not forloop.last %},{% endif %}
     {% endfor %}
 ]

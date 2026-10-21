@@ -171,7 +171,7 @@
         }
 
         if (audio) {
-            audio.src = track.track_url;
+            audio.src = track.final_url;
             audio.play().catch(function (error) {
                 console.warn("Playback interrupted or waiting for user interaction:", error);
             });

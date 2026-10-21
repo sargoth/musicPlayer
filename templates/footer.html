@@ -244,7 +244,7 @@
                         if (typeof playFn === 'function') {
                             playFn(track);
                         } else if (typeof playTrack === 'function') {
-                            playTrack(track.track_url, track.title, track.artist, track.cover_url, track.id);
+                            playTrack(track.final_url, track.title, track.artist, track.cover_url, track.id);
                         }
                     }
                 }

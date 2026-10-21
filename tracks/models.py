@@ -1,6 +1,8 @@
+import mutagen
+from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
-from .validators import validate_url_extension
+from .validators import validate_url_extension, validate_audio_file
 
 
 class Track(models.Model):
@@ -10,6 +12,8 @@ class Track(models.Model):
     )
 
     duration_in_seconds = models.PositiveIntegerField(
+        blank=True,
+        null=True,
         validators=[
             MinValueValidator(1, message="The duration must be 1 second or more.")
         ],
@@ -17,8 +21,18 @@ class Track(models.Model):
     )
 
     track_url = models.URLField(
+        blank=True,
+        null=True,
         validators=[validate_url_extension],
         help_text="Link to the track/song you would like to add."
+    )
+
+    audio_file = models.FileField(
+        upload_to="tracks/audio_files",
+        blank=True,
+        null=True,
+        validators=[validate_audio_file],
+        help_text="Upload an audio file."
     )
 
     times_played = models.PositiveIntegerField(
@@ -48,3 +62,21 @@ class Track(models.Model):
         if hours > 0:
             return f"{hours}:{minutes:02d}:{seconds:02d}"
         return f"{minutes}:{seconds:02d}"
+
+    def save(self, *args, **kwargs):
+        if self.audio_file and not self.duration_in_seconds:
+            try:
+                audio = mutagen.File(self.audio_file)
+
+                if audio and audio.info.length:
+                    self.duration_in_seconds = audio.info.length
+            except Exception as e:
+                print(f"Unable to calculate track duration from file: {e}")
+        
+        super().save(*args, **kwargs)
+
+    @property
+    def final_url(self):
+        if self.audio_file:
+            return self.audio_file.url
+        return self.track_url

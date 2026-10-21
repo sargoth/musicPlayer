@@ -13,23 +13,27 @@
 
                 {% block form_fields %}
                     {% for field in form %}
-                        <div>
-                            <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-slate-300 mb-2">
-                                {{ field.label }}
-                            </label>
+                        {% if field.is_hidden %}
                             {{ field }}
-                            {% if field.help_text %}
-                                <p class="mt-1 text-xs text-slate-500">{{ field.help_text }}</p>
-                            {% endif %}
+                        {% else %}
+                            <div>
+                                <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-slate-300 mb-2">
+                                    {{ field.label }}
+                                </label>
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <p class="mt-1 text-xs text-slate-500">{{ field.help_text }}</p>
+                                {% endif %}
 
-                            {% if field.errors %}
-                                {% for error in field.errors %}
-                                    <p class="mt-1 text-xs text-red-400 font-medium flex items-center gap-1">
-                                        <span>•</span> {{ error }}
-                                    </p>
-                                {% endfor %}
-                            {% endif %}
-                        </div>
+                                {% if field.errors %}
+                                    {% for error in field.errors %}
+                                        <p class="mt-1 text-xs text-red-400 font-medium flex items-center gap-1">
+                                            <span>•</span> {{ error }}
+                                        </p>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        {% endif %}
                     {% endfor %}
                 {% endblock %}
 
