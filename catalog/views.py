@@ -20,7 +20,7 @@ class ArtistListView(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return Artist.objects.prefetch_related("genres").all()
+        return Artist.objects.prefetch_related("genres").all().order_by("name")
 
 
 class AlbumListView(ListView):
@@ -30,7 +30,7 @@ class AlbumListView(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return Album.objects.select_related("artist").all()
+        return Album.objects.select_related("artist").all().order_by("title")
 
 
 class AlbumDetailsView(DetailView):
@@ -104,6 +104,9 @@ class GenreListView(ListView):
     template_name = "catalog/list_genre.html"
     context_object_name = "genres"
     paginate_by = 12
+
+    def get_queryset(self):
+        return Genre.objects.all().order_by("name")
 
 
 class GenreCreateView(InvalidTurboFormMixin, CreateView):

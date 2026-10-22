@@ -26,6 +26,9 @@ class PlaylistListView(ListView):
     context_object_name = "playlists"
     paginate_by = 10
 
+    def get_queryset(self):
+        return Playlist.objects.prefetch_related("tracks").all().order_by("title")
+
 
 class PlaylistDetailView(DetailView):
     model = Playlist
