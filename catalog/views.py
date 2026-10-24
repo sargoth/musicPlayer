@@ -1,6 +1,7 @@
 from typing import Any
 
 from django.db.models import Q
+from django.db.models.query import Prefetch
 from django.urls import reverse_lazy, reverse
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
@@ -39,7 +40,7 @@ class AlbumDetailsView(DetailView):
     context_object_name = "album"
 
     def get_queryset(self):
-        return Album.objects.select_related("artist").prefetch_related("tracks")
+        return Album.objects.select_related("artist").prefetch_related(Prefetch("tracks", queryset=Track.objects.order_by("pk")))
 
 
 class ArtistDetailsView(DetailView):
