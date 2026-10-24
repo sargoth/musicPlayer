@@ -1,7 +1,7 @@
 import os
 from django.core.exceptions import ValidationError
 
-VALID_EXTENSIONS = [".mp3", ".wav", ".flac", ".aac"]
+VALID_EXTENSIONS = [".mp3", ".wav", ".flac", ".aac", ".m4a"]
 
 
 def validate_url_extension(url: str) -> None:
@@ -29,5 +29,5 @@ def validate_audio_file(file):
 
     if file.size > max_file_size_mb * 1024 * 1024:
         raise ValidationError(
-            f"File size exceeds the allowed maximum of {max_file_size_mb}. The current file size is {file.size / (1024 * 1024):.1f}MB."
+            f"File size exceeds the allowed maximum of {max_file_size_mb} MB. The current file size is {file.size / (1024 * 1024):.0f} MB."
         )

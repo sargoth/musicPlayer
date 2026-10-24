@@ -173,9 +173,21 @@
         }
 
         if (audio) {
-            audio.src = track.final_url;
+            const sourceUrl = new URL(track.final_url, document.baseURI).href;
+            if (audio.src !== sourceUrl) {
+                audio.pause();
+                audio.src = sourceUrl;
+                audio.load();
+            } else {
+                audio.currentTime = 0;
+            }
             audio.play().catch(function (error) {
-                console.warn("Playback interrupted or waiting for user interaction:", error);
+                if (error.name === 'AbortError') return;
+                if (error.name === 'NotAllowedError') {
+                    console.warn("Playback requires user interaction. Press Play to continue.", error);
+                } else {
+                    console.error("Unable to play track:", error);
+                }
             });
         }
 

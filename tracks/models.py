@@ -1,7 +1,8 @@
 import mutagen
-from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.urls import reverse
+
 from .validators import validate_url_extension, validate_audio_file
 
 
@@ -72,11 +73,11 @@ class Track(models.Model):
                     self.duration_in_seconds = audio.info.length
             except Exception as e:
                 print(f"Unable to calculate track duration from file: {e}")
-        
+
         super().save(*args, **kwargs)
 
     @property
     def final_url(self):
         if self.audio_file:
-            return self.audio_file.url
+            return reverse("tracks:track_seek", kwargs={"pk": self.pk})
         return self.track_url

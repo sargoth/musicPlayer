@@ -1,10 +1,16 @@
+import mimetypes
+import os
+import re
+from pathlib import Path
 from typing import Any
 
 from django.apps import apps
 from django.db.models import F
-from django.http import HttpRequest, HttpResponse, HttpResponseBase
+from django.http import HttpRequest, HttpResponse, HttpResponseBase, Http404, FileResponse, StreamingHttpResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
+from django.views import View
+from django.views.decorators.http import require_safe
 from django.views.generic.edit import CreateView, DeleteView
 
 from musicPlayer.mixins import InvalidTurboFormMixin
@@ -57,3 +63,15 @@ def track_times_played_view(request, pk: int) -> HttpResponse:
 
     return HttpResponse(status=204)
 
+
+# Source - https://stackoverflow.com/a/70979054
+class TrackSeekView(View):
+    def get(self, request, pk, *args, **kwargs):
+        audio_file = Track.objects.get(pk=pk).audio_file.path
+
+        with open(audio_file, 'rb') as f:
+            response = HttpResponse(f.read(), content_type='audio/mpeg')
+            response['Content-Disposition'] = 'inline;'
+            response['Accept-Ranges'] = 'bytes'
+            response['Content-Length'] = os.path.getsize(audio_file)
+        return response
