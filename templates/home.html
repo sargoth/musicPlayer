@@ -37,9 +37,9 @@
                     <div class="flex items-center gap-4">
                         {% include "play_button.html" with button_icon="▶"%}
                         <div>
-                            <div class="font-semibold text-sm text-white">{{ track.title }}</div>
-                            <div class="text-xs text-slate-400">{{ track.album.artist.name }}
-                                - {{ track.album.title }} - {{ track.convert_track_duration }}</div>
+                            <div class="font-semibold text-sm text-white">{{ track.title|title }}</div>
+                            <div class="text-xs text-slate-400">{{ track.album.artist.name|capfirst }}
+                                - {{ track.album.title|capfirst }} - {{ track.convert_track_duration }}</div>
                         </div>
                     </div>
                     <div class="text-xs text-slate-500 font-mono">

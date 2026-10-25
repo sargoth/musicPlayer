@@ -34,7 +34,7 @@
                                 <div>
                                     <a href="{% url 'catalog:album_detail' track.album.pk %}"
                                        class="text-sm font-medium text-slate-200 hover:text-indigo-400 transition block">
-                                        {{ track.title }}
+                                        {{ track.title|capfirst }}
                                     </a>
                                     <div class="text-xs text-slate-400">
                                         <a href="{% url 'catalog:artist_detail' track.album.artist.pk %}"

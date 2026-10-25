@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    {% include 'includes/../page_header.html' with title="Playlists" button_link="playlists:create_playlist" button_label="Create Playlist" %}
+    {% include 'includes/../page_header.html' with header_title="Playlists" header_subtitle="Check out all our community made playlists" button_link="playlists:create_playlist" button_label="Create Playlist" %}
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
         {% for playlist in playlists %}
             <a href="{% url 'playlists:playlist_detail' playlist.pk %}"

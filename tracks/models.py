@@ -79,5 +79,5 @@ class Track(models.Model):
     @property
     def final_url(self):
         if self.audio_file:
-            return reverse("tracks:track_seek", kwargs={"pk": self.pk})
+            return reverse("tracks:track_audio", kwargs={"pk": self.pk})
         return self.track_url

@@ -61,7 +61,7 @@ def track_times_played_view(request, pk: int) -> HttpResponse:
 
 
 # Source - https://stackoverflow.com/a/70979054
-class TrackSeekView(View):
+class UploadedTrackPlayView(View):
     def get(self, request, pk, *args, **kwargs):
         audio_file = Track.objects.get(pk=pk).audio_file.path
 

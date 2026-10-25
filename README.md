@@ -11,6 +11,7 @@ Users can manage tracks, albums, artists, and genres without having to create an
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Starting with an Empty Library](#starting-with-an-empty-library)
+- [Optional Sample Data](#optional-sample-data)
 - [Audio Sources](#audio-sources)
 - [Project Structure](#project-structure)
 - [Database Relationships](#database-relationships)
@@ -112,6 +113,12 @@ http://127.0.0.1:8000/
 4. Open the album details and choose **Add Track**.
 5. Provide either an audio upload or a direct audio URL.
 6. Open **Playlists**, create a playlist, and select existing tracks.
+
+## Optional Sample Data
+If you would like to quickly populate the database with some sample data please use the following command:
+```bash
+python manage.py seed_data
+```
 
 ## Audio Sources
 
