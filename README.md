@@ -6,7 +6,7 @@ Users can manage tracks, albums, artists, and genres without having to create an
 ## Table of Contents
 - [Features](#features)
 - [Screenshots](#screenshots)
-- [Technology](#technology)
+- [Tech Stack](#tech-stack)
 - [AI Assistance](#ai-assistance)
 - [Installation](#installation)
 - [Configuration](#configuration)
@@ -44,7 +44,7 @@ Users can manage tracks, albums, artists, and genres without having to create an
 ### Search Results
 ![Search results page](docs/screenshots/search_results_page.png)
 
-## Technology
+## Tech Stack
 
 - Python 3.14.3
 - Django 6.1.1
@@ -58,10 +58,13 @@ AI tools were used to generate the HTML, CSS, and JS for the frontend of the pro
 
 ## Installation
 
-Download or clone the repository and open a terminal in the directory
-containing `manage.py`.
+### 1. Clone the repository and change directory
+```bash
+git clone https://github.com/sargoth/musicPlayer.git
+cd musicPlayer
+```
 
-### 1. Create a virtual environment
+### 2. Create a virtual environment
 
 ```bash
 python -m venv .venv
@@ -78,20 +81,23 @@ Windows venv activation:
 ```powershell
 .\.venv\Scripts\Activate.ps1
 ```
-
-### 2. Install dependencies
+If you get error about scripts being disabled run this command:
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+### 3. Install dependencies
 
 ```bash
 python -m pip install -r requirements.txt
 ```
 
-### 3. Apply database migrations
+### 4. Apply database migrations
 
 ```bash
 python manage.py migrate
 ```
 
-### 4. Start the development server
+### 5. Start the development server
 
 ```bash
 python manage.py runserver
